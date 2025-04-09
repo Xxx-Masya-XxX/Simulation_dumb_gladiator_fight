@@ -47,7 +47,10 @@ class Entity(GameObject):
                     # Взаимодействие
                     if self.x == i.x and self.y == i.y:
                         if i.name == "heal":
-                            self.hp += 4
+                            self.hp += 20
+                            i.use_item()
+                        elif i.name == "atk":
+                            self.atk += 10
                             i.use_item()
 
                 elif isinstance(i, Entity):
@@ -62,7 +65,7 @@ class Entity(GameObject):
                         self.y -= 1
 
                     # Атака
-                    if self.x == i.x and self.y == i.y:
+                    if self.x == i.x and self.y == i.y and i.id != self.id:
                         self.attack(i)
 
             self.stamina -= 1
@@ -72,16 +75,16 @@ class Entity(GameObject):
     
     def attack(self,enemy):
         if self.hp >0:
-            if self.stamina >0 and self.hp >3:
+            if self.stamina >0 :
                 if self.stamina -self.atk >=0:
                     enemy.hp-=self.atk
                     self.stamina -= 2
         else:
-            del self
+            pass
         pass
     
     def use_item(self):
         pass
     def __str__(self):
         base_str = super().__str__()
-        return f"{base_str}, HP: {self.hp}, ATK: {self.atk}, STAMINA: {self.stamina}"
+        return f"ID:{self.id} pos:{base_str}, HP: {self.hp}, ATK: {self.atk}, STAMINA: {self.stamina}"

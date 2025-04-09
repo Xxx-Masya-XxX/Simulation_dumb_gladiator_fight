@@ -1,4 +1,5 @@
 from render import Render
+from render_window import GameWindow
 from game_world import GameWorld
 from entity import Entity
 from item import Item
@@ -8,25 +9,42 @@ from position import Position
 import random
 import os
 from collections import Counter
-
-
-def rand_x():
-    return random.randrange(0,map_width-1)
-def rand_y():
-    return random.randrange(0,map_height-1)
+from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QGridLayout,QLabel,QListWidget,QVBoxLayout,QHBoxLayout
+import sys
+from utils import rand_x, rand_y
 
 class Game:
     game_status = True
     def start(self):
         self.game_objs_list = [
-            Entity(position=Position(rand_x(),rand_y()),entity_id=1,render_img="@",hp=10,atk=1,stamina=20),
-            Entity(position=Position(rand_x(),rand_y()),entity_id=2,render_img="@",hp=10,atk=4,stamina=20),
-            Entity(position=Position(rand_x(),rand_y()),entity_id=3,render_img="@",hp=10,atk=1,stamina=20),
-            Entity(position=Position(rand_x(),rand_y()),entity_id=4,render_img="@",hp=10,atk=1,stamina=20),
-            Entity(position=Position(rand_x(),rand_y()),entity_id=5,render_img="@",hp=10,atk=1,stamina=20),
+            Entity(position=Position(rand_x(),rand_y()),entity_id=1,render_img="@",hp=10,atk=1,stamina=1000),
+            Entity(position=Position(rand_x(),rand_y()),entity_id=2,render_img="@",hp=10,atk=4,stamina=1000),
+            Entity(position=Position(rand_x(),rand_y()),entity_id=3,render_img="@",hp=10,atk=1,stamina=1000),
+            Entity(position=Position(rand_x(),rand_y()),entity_id=4,render_img="@",hp=10,atk=1,stamina=1000),
+            Entity(position=Position(rand_x(),rand_y()),entity_id=5,render_img="@",hp=10,atk=1,stamina=1000),
             Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
             Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
             Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
             Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
@@ -47,8 +65,15 @@ class Game:
             Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
         ]
         self.game_world = GameWorld(objects=self.game_objs_list)
-        self.rend = Render(game_world=self.game_world)
-        cur_objs = self.game_world.get_objects()
+        
+        app = QApplication(sys.argv)
+        
+        self.rend = GameWindow(game_world=self.game_world)
+        self.rend.show()
+
+        sys.exit(app.exec())
+        # self.rend = Render(game_world=self.game_world)
+        # cur_objs = self.game_world.get_objects()
         # for i in cur_objs:
         #     print(i)
             
@@ -69,9 +94,10 @@ class Game:
             
             self.rend.render()
         else:
-            os.system('cls' if os.name == 'nt' else 'clear')
+            # os.system('cls' if os.name == 'nt' else 'clear')
             self.game_status = False
-            print("Симуляция закончилась")
+            # print("Симуляция закончилась")
+            pass
             
 
 if __name__ == "__main__":
