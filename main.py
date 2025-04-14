@@ -17,65 +17,33 @@ class Game:
     game_status = True
     def start(self):
         self.game_objs_list = [
-            Entity(position=Position(rand_x(),rand_y()),entity_id=1,render_img="@",hp=10,atk=1,stamina=1000),
-            Entity(position=Position(rand_x(),rand_y()),entity_id=2,render_img="@",hp=10,atk=4,stamina=1000),
-            Entity(position=Position(rand_x(),rand_y()),entity_id=3,render_img="@",hp=10,atk=1,stamina=1000),
-            Entity(position=Position(rand_x(),rand_y()),entity_id=4,render_img="@",hp=10,atk=1,stamina=1000),
-            Entity(position=Position(rand_x(),rand_y()),entity_id=5,render_img="@",hp=10,atk=1,stamina=1000),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
-            Item(position=Position(rand_x(),rand_y()),render_img="#",name="heal"),
+            Entity(position=Position(rand_x(),rand_y()),entity_id=1,render_img="😎",hp=10,atk=1,stamina=100),
+            Entity(position=Position(rand_x(),rand_y()),entity_id=2,render_img="🧑🏻",hp=10,atk=1,stamina=100),
+            Entity(position=Position(rand_x(),rand_y()),entity_id=3,render_img="👴",hp=10,atk=1,stamina=100),
+            Entity(position=Position(rand_x(),rand_y()),entity_id=4,render_img="🥺",hp=10,atk=1,stamina=100),
+            Entity(position=Position(rand_x(),rand_y()),entity_id=5,render_img="👨🏿",hp=10,atk=1,stamina=100),
         ]
+        self.game_objs_list +=[ 
+            Item(position=Position(rand_x(),rand_y()),render_img="🩹",name="heal")
+            for _ in range(random.randint(10, 40))
+            ]
+        self.game_objs_list +=[ 
+            Item(position=Position(rand_x(),rand_y()),render_img="🪓",name="atk")
+            for _ in range(random.randint(10, 40))
+            ]
+        self.game_objs_list +=[ 
+            Item(position=Position(rand_x(),rand_y()),render_img="⚡",name="stamina")
+            for _ in range(random.randint(10, 40))
+            ]
         self.game_world = GameWorld(objects=self.game_objs_list)
         
+        # рендер в окне
         app = QApplication(sys.argv)
-        
         self.rend = GameWindow(game_world=self.game_world)
         self.rend.show()
-
         sys.exit(app.exec())
+        # рендер в консоли
         # self.rend = Render(game_world=self.game_world)
-        # cur_objs = self.game_world.get_objects()
-        # for i in cur_objs:
-        #     print(i)
             
     def update(self):
         type_counts = Counter(type(obj) for obj in self.game_objs_list)

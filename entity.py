@@ -18,73 +18,79 @@ class Entity(GameObject):
             return False
         else: return True
     def move(self, area):
-        if self.stamina >0:
-            choice = random.randrange(0, 3)
-            
+        if self.stamina > 0:
+            # Случайный выбор направления
+            choice = random.choice([1, 2])  # Переход по оси X или Y
+
+            # Функция для движения по осям
+            def move_in_direction(current, target, max_value):
+                if current < target and current < max_value - 1:
+                    return current + 1
+                elif current > target and current > 0:
+                    return current - 1
+                return current
+
+            # Движение по оси X или Y
             if choice == 1:
-                if self.x < map_width - 1:
-                    self.x += 1
-                else:
-                    self.x -= 1
+                self.x = move_in_direction(self.x, random.choice([self.x + 1, self.x - 1]), map_width)
             elif choice == 2:
-                if self.y < map_height - 1:
-                    self.y += 1
-                else:
-                    self.y -= 1
+                self.y = move_in_direction(self.y, random.choice([self.y + 1, self.y - 1]), map_height)
 
-            for i in area:
-                if isinstance(i, Item):
+            # Обработка взаимодействий с объектами
+            for obj in area:
+                if isinstance(obj, Item):
                     # Движение к предмету
-                    if self.x < i.x and self.x < map_width - 1:
-                        self.x += 1
-                    elif self.x > i.x and self.x > 0:
-                        self.x -= 1
-                    elif self.y < i.y and self.y < map_height - 1:
-                        self.y += 1
-                    elif self.y > i.y and self.y > 0:
-                        self.y -= 1
+                    self.x = move_in_direction(self.x, obj.x, map_width)
+                    self.y = move_in_direction(self.y, obj.y, map_height)
 
-                    # Взаимодействие
-                    if self.x == i.x and self.y == i.y:
-                        if i.name == "heal":
-                            self.hp += 20
-                            i.use_item()
-                        elif i.name == "atk":
-                            self.atk += 10
-                            i.use_item()
+                    # Взаимодействие с предметом
+                    if self.x == obj.x and self.y == obj.y:
+                        self.interact_with_item(obj)
 
-                elif isinstance(i, Entity):
-                    # Движение к другому существу
-                    if self.x < i.x and self.x < map_width - 1:
-                        self.x += 1
-                    elif self.x > i.x and self.x > 0:
-                        self.x -= 1
-                    elif self.y < i.y and self.y < map_height - 1:
-                        self.y += 1
-                    elif self.y > i.y and self.y > 0:
-                        self.y -= 1
+                elif isinstance(obj, Entity):
+                    # Движение к сущности
+                    self.x = move_in_direction(self.x, obj.x, map_width)
+                    self.y = move_in_direction(self.y, obj.y, map_height)
 
-                    # Атака
-                    if self.x == i.x and self.y == i.y and i.id != self.id:
-                        self.attack(i)
+                    # Атака сущности
+                    if self.x == obj.x and self.y == obj.y and obj.id != self.id:
+                        self.attack(obj)
 
+            # Трата стамины
             self.stamina -= 1
-        else: 
-            self.hp-=1
+
+        else:
+            self.stamina += 10  # Восстановление стамины
+            self.hp -= 1  # Потеря здоровья при отсутствии стамины
+
+    def interact_with_item(self, item):
+        """Обработка взаимодействия с предметом."""
+        if item.name == "heal":
+            self.hp += 10
+            self.stamina += 5
+            item.use_item()
+        elif item.name == "atk":
+            self.atk += 10
+            item.use_item()
+        elif item.name == "stamina":
+            self.stamina += 10
+            item.use_item()
+
 
     
-    def attack(self,enemy):
-        if self.hp >0:
-            if self.stamina >0 :
-                if self.stamina -self.atk >=0:
-                    enemy.hp-=self.atk
+    def attack(self, enemy):
+        """Атака врага, если они на одной клетке."""
+        if self.hp > 0 and self.stamina > 0:
+            # Проверяем, что объекты на одной клетке
+            if self.x == enemy.x and self.y == enemy.y:
+                if self.stamina - self.atk >= 0:
+                    enemy.hp -= self.atk
                     self.stamina -= 2
-        else:
-            pass
-        pass
+                    print(f"Enemy attacked! Remaining HP: {enemy.hp}, Stamina: {self.stamina}")
+
     
     def use_item(self):
         pass
     def __str__(self):
         base_str = super().__str__()
-        return f"ID:{self.id} pos:{base_str}, HP: {self.hp}, ATK: {self.atk}, STAMINA: {self.stamina}"
+        return f"{self.render_img} ID:{self.id} pos:{base_str}, HP: {self.hp}, ATK: {self.atk}, STAMINA: {self.stamina}"

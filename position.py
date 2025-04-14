@@ -7,10 +7,10 @@ class Position:
         return (self.x, self.y)
     def get_poss_around(self):
         return [
-            (self.x+1,self.y+1),
-            (self.x-1,self.y-1),
-            (self.x-1,self.y+1),
-            (self.x+1,self.y-1),
+            (self.x+1,self.y),
+            (self.x-1,self.y),
+            (self.x,self.y+1),
+            (self.x,self.y-1),
             (self.x,self.y),
         ]
     def __str__(self):
