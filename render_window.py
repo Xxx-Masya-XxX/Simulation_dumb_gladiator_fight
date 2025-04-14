@@ -8,13 +8,13 @@ from item import Item
 from collections import Counter
 from position import Position
 from utils import rand_x, rand_y
-from game_world import GameWorld
+from Game import Game
 
 class GameWindow(QWidget):
-    def __init__(self, game_world:GameWorld):
+    def __init__(self, game:Game):
         super().__init__()
 
-        self.game_world = game_world
+        self.game = game
         self.render_frame = 1
 
         # Создание виджетов
@@ -47,21 +47,21 @@ class GameWindow(QWidget):
         # self.render()
 
     def update_game(self):
-        self.game_world.update()  # твоя игровая логика
+        self.game.update()  # твоя игровая логика
         self.render()
     def render(self):
         self.game_map.clear_all_buttons()
-        for i in self.game_world.get_objects():
+        for i in self.game.game_world.get_objects():
             pos = i.get_pos()
             self.game_map.set_button_text(pos[1], pos[0], i.render_img)
 
-        type_counts = Counter(type(obj) for obj in self.game_world.get_objects())
+        type_counts = Counter(type(obj) for obj in self.game.game_world.get_objects())
         self.tick_label.setText("tick: "+str(self.render_frame))
         self.count_entity.setText("count_entity: "+str(type_counts.get(Entity, 0)))
         self.count_items.setText("count_items: "+str(type_counts.get(Item, 0)))
-        self.count_objects.setText("count_objects: "+str(len(self.game_world.get_objects())))
+        self.count_objects.setText("count_objects: "+str(len(self.game.game_world.get_objects())))
         self.entity_list.clear()
-        for i in self.game_world.get_objects():
+        for i in self.game.game_world.get_objects():
             if isinstance(i,Entity):
                 self.entity_list.addItem(i.__str__())
         self.render_frame += 1
