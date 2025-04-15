@@ -1,6 +1,6 @@
-from entity import Entity
-from item import Item
-from settings import *
+from .GameObjects.entity import Entity
+from .GameObjects.item import Item
+from .settings import *
 from collections import Counter
 
 class GameWorld:

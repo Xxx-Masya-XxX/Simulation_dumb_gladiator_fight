@@ -1,6 +1,6 @@
-from settings import *
-from entity import Entity
-from item import Item
+from src.settings import *
+from ..GameObjects.entity import Entity
+from ..GameObjects.item import Item
 from collections import Counter
 import os
 

@@ -1,19 +1,19 @@
-from game_world import GameWorld
-from entity import Entity
-from item import Item
-from settings import *
-from position import Position
+from .game_world import GameWorld
+from .GameObjects.entity import Entity
+from .GameObjects.item import Item
+from .settings import *
+from .GameObjects.position import Position
 import random
 from collections import Counter
 from PySide6.QtWidgets import QApplication
 import sys
-from utils import rand_x, rand_y
+from .utils.utils import rand_x, rand_y
 
 class Game:
     game_status = True
     def __init__(self,render_class):
         self.render_class = render_class
-        pass
+        
     def start(self):
         self.game_objs_list = [
             Entity(position=Position(rand_x(),rand_y()),entity_id=1,render_img="😎",hp=10,atk=1,stamina=100),
@@ -52,7 +52,7 @@ class Game:
                     if g_obj.is_used():
                         self.game_objs_list.pop(self.game_objs_list.index(g_obj))
                 if type(g_obj) is Entity:
-                    if g_obj.is_dead() == False:
+                    if g_obj.is_alive():
                         poss = g_obj.get_poss_around()
                         area = [i for i in self.game_objs_list if i.get_pos() in poss ]
                         g_obj.move(area)
@@ -64,3 +64,6 @@ class Game:
             self.game_status = False
             # print("Симуляция закончилась")
             pass
+        
+    def is_over(self):
+        return self.game_status
