@@ -1,5 +1,5 @@
 import random
-from settings import *
+from src.settings import *
 def rand_x():
     return random.randrange(0,map_width-1)
 def rand_y():

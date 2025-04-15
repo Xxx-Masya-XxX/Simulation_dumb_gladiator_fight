@@ -1,6 +1,7 @@
-from object import GameObject
-from item import Item
-from settings import map_height, map_width
+from typing import override
+from .GameObject import GameObject
+from .item import Item
+from ..settings import map_height, map_width
 import random
 
 class Entity(GameObject):
@@ -13,11 +14,19 @@ class Entity(GameObject):
         self.stamina = stamina
         
         pass
-    def is_dead(self):
-        if self.hp >0:
-            return False
-        else: return True
+    @override
+    def update(self):
+        if self.hp > 0:
+            self.move()
+        else:
+            self.die()
+        pass
+
     def move(self, area):
+        if self.hp<=0:
+            self.die()
+            return
+        
         if self.stamina > 0:
             # Случайный выбор направления
             choice = random.choice([1, 2])  # Переход по оси X или Y
@@ -75,22 +84,19 @@ class Entity(GameObject):
         elif item.name == "stamina":
             self.stamina += 10
             item.use_item()
-
-
     
-    def attack(self, enemy):
+    def attack(self, enemy:'Entity'):
         """Атака врага, если они на одной клетке."""
-        if self.hp > 0 and self.stamina > 0:
+        if self.stamina > 0:
             # Проверяем, что объекты на одной клетке
             if self.x == enemy.x and self.y == enemy.y:
-                if self.stamina - self.atk >= 0:
+                if self.stamina >= 0:
                     enemy.hp -= self.atk
                     self.stamina -= 2
-                    print(f"Enemy attacked! Remaining HP: {enemy.hp}, Stamina: {self.stamina}")
-
     
     def use_item(self):
         pass
+    
     def __str__(self):
         base_str = super().__str__()
         return f"{self.render_img} ID:{self.id} pos:{base_str}, HP: {self.hp}, ATK: {self.atk}, STAMINA: {self.stamina}"

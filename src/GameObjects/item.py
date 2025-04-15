@@ -1,4 +1,4 @@
-from object import GameObject
+from .GameObject import GameObject
 
 
 class Item(GameObject):
@@ -6,8 +6,10 @@ class Item(GameObject):
         super().__init__(position,render_img)
         self.name = name
         self.is_used_flag = False
-        pass
+
     def is_used(self):
         return self.is_used_flag
+
     def use_item(self):
         self.is_used_flag =True
+        
