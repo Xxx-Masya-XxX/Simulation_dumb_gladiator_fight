@@ -6,8 +6,6 @@ from PySide6.QtCore import QSize
 from ..GameObjects.entity import Entity
 from ..GameObjects.item import Item
 from collections import Counter
-
-from ..utils.utils import rand_x, rand_y
 from ..Game import Game
 
 class GameWindow(QWidget):
@@ -15,14 +13,14 @@ class GameWindow(QWidget):
         super().__init__()
 
         self.game = game
-        self.render_frame = 1
+        
+        self.showMaximized()
 
         # --- Карта и скролл ---
         self.game_map = ButtonGrid(self, map_height, map_width)
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidget(self.game_map)
-        self.scroll_area.setWidgetResizable(True)
-        # self.scroll_area.setFixedSize(800, 600)
+        self.scroll_area.setWidgetResizable(False)
 
         # --- Info-панель ---
         self.tick_label = QLabel("tick: 1")
@@ -32,7 +30,6 @@ class GameWindow(QWidget):
         self.entity_list = QListWidget()
 
 
-        # Упаковываем в layout
         info_layout = QVBoxLayout()
         info_layout.addWidget(self.tick_label)
         info_layout.addWidget(self.count_entity)
@@ -40,7 +37,6 @@ class GameWindow(QWidget):
         info_layout.addWidget(self.count_objects)
         info_layout.addWidget(self.entity_list)
 
-        # Обернём в виджет, чтобы управлять политикой
         info_widget = QWidget()
         info_widget.setLayout(info_layout)
         info_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
@@ -48,8 +44,8 @@ class GameWindow(QWidget):
 
         # --- Главный layout ---
         main_layout = QHBoxLayout()
-        main_layout.addWidget(self.scroll_area, stretch=1)  # растягиваем только карту
-        main_layout.addWidget(info_widget)  # инфо-панель не растягиваем
+        main_layout.addWidget(self.scroll_area, stretch=1)
+        main_layout.addWidget(info_widget)
 
         self.setLayout(main_layout)
         self.setWindowTitle("Game Window")
@@ -73,7 +69,7 @@ class GameWindow(QWidget):
             self.game_map.set_button_text(pos[1], pos[0], i.render_img)
 
         type_counts = Counter(type(obj) for obj in self.game.game_world.get_objects())
-        self.tick_label.setText("tick: "+str(self.render_frame))
+        self.tick_label.setText("tick: "+str(self.game.game_tick))
         self.count_entity.setText("count_entity: "+str(type_counts.get(Entity, 0)))
         self.count_items.setText("count_items: "+str(type_counts.get(Item, 0)))
         self.count_objects.setText("count_objects: "+str(len(self.game.game_world.get_objects())))
@@ -81,7 +77,7 @@ class GameWindow(QWidget):
         for i in self.game.game_world.get_objects():
             if isinstance(i,Entity):
                 self.entity_list.addItem(i.__str__())
-        self.render_frame += 1
+
 
         ...
 
@@ -96,14 +92,15 @@ class ButtonGrid(QWidget):
         layout = QGridLayout()
         self.setLayout(layout)
 
-        button_size = 20  # Размер стороны квадрата
+        self.button_size = 20 
 
         for row in range(rows):
             for col in range(cols):
                 btn = QPushButton(f" ")
-                btn.setFixedSize(QSize(button_size, button_size))  # Квадратные кнопки
+                btn.setFixedSize(QSize(self.button_size, self.button_size))
                 self.buttons[row][col] = btn
                 layout.addWidget(btn, row, col)
+        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
 
     def set_button_text(self, row, col, text):
         """Установить текст кнопки по координатам (row, col)."""
@@ -117,3 +114,10 @@ class ButtonGrid(QWidget):
             for row in range(self.rows):
                 for col in range(self.cols):
                     self.buttons[row][col].setText("")
+    def sizeHint(self):
+        width = self.cols * self.button_size
+        height = self.rows * self.button_size
+        return QSize(width, height)
+
+    def minimumSizeHint(self):
+        return self.sizeHint()
