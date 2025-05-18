@@ -1,2 +1,2 @@
 map_width = 60
-map_height = 4
+map_height = 40

@@ -53,7 +53,7 @@ class GameWindow(QWidget):
         # --- Таймер ---
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_game)
-        self.timer.start(100)
+        self.timer.start(300)
 
     def update_game(self):
         if self.game.is_over():
